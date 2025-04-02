@@ -1,0 +1,22 @@
+Traceback (most recent call last):
+  File "/Users/ayushbisht/Desktop/CryptoAgent/example.py", line 8, in <module>
+    from cryptoagent import CryptoAgent, CRYPTO_AGENT_SYS_PROMPT
+  File "/Users/ayushbisht/Desktop/CryptoAgent/cryptoagent/__init__.py", line 1, in <module>
+    from cryptoagent.main import (
+  File "/Users/ayushbisht/Desktop/CryptoAgent/cryptoagent/main.py", line 11, in <module>
+    from swarms.agents import Agent
+  File "/Users/ayushbisht/Desktop/CryptoAgent/venv/lib/python3.9/site-packages/swarms/__init__.py", line 6, in <module>
+    from swarms.swarms import *  # noqa: E402, F403
+  File "/Users/ayushbisht/Desktop/CryptoAgent/venv/lib/python3.9/site-packages/swarms/swarms/__init__.py", line 2, in <module>
+    from swarms.structs.autoscaler import AutoScaler
+  File "/Users/ayushbisht/Desktop/CryptoAgent/venv/lib/python3.9/site-packages/swarms/structs/__init__.py", line 1, in <module>
+    from swarms.structs.agent import Agent
+  File "/Users/ayushbisht/Desktop/CryptoAgent/venv/lib/python3.9/site-packages/swarms/structs/agent.py", line 24, in <module>
+    from swarms.tools.tool import BaseTool
+  File "/Users/ayushbisht/Desktop/CryptoAgent/venv/lib/python3.9/site-packages/swarms/tools/tool.py", line 120, in <module>
+    class BaseTool(RunnableSerializable[Union[str, Dict], Any]):
+  File "/Users/ayushbisht/Desktop/CryptoAgent/venv/lib/python3.9/site-packages/swarms/tools/tool.py", line 195, in BaseTool
+    class Config(Serializable.Config):
+  File "/Users/ayushbisht/Desktop/CryptoAgent/venv/lib/python3.9/site-packages/pydantic/_internal/_model_construction.py", line 271, in __getattr__
+    raise AttributeError(item)
+AttributeError: Config

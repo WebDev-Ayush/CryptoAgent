@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitcoin Live Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+        .card {
+            background-color: #2d2d2d;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .price {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #00ff00;
+        }
+        .change-positive {
+            color: #00ff00;
+        }
+        .change-negative {
+            color: #ff0000;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold text-center mb-8">Bitcoin Live Tracker</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Price Card -->
+            <div class="card">
+                <h2 class="text-xl font-semibold mb-4">Current Price</h2>
+                <div class="price">${{ "{:,.2f}".format(data.current_price) }}</div>
+                <div class="mt-2 text-sm text-gray-400">Last Updated: {{ data.last_updated }}</div>
+            </div>
+
+            <!-- 24h Change Card -->
+            <div class="card">
+                <h2 class="text-xl font-semibold mb-4">24h Change</h2>
+                <div class="text-2xl font-bold {% if data.price_change_percentage_24h > 0 %}change-positive{% else %}change-negative{% endif %}">
+                    {{ "{:+.2f}".format(data.price_change_percentage_24h) }}%
+                </div>
+                <div class="mt-2 text-sm text-gray-400">High: ${{ "{:,.2f}".format(data.high_24h) }}</div>
+                <div class="text-sm text-gray-400">Low: ${{ "{:,.2f}".format(data.low_24h) }}</div>
+            </div>
+
+            <!-- Market Stats Card -->
+            <div class="card">
+                <h2 class="text-xl font-semibold mb-4">Market Stats</h2>
+                <div class="space-y-2">
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Market Cap:</span>
+                        <span>${{ "{:,.2f}".format(data.market_cap) }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">24h Volume:</span>
+                        <span>${{ "{:,.2f}".format(data.total_volume) }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Auto-refresh data every 30 seconds
+        setInterval(() => {
+            fetch('/api/bitcoin')
+                .then(response => response.json())
+                .then(data => {
+                    // Update price
+                    document.querySelector('.price').textContent = `$${parseFloat(data.current_price).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                    
+                    // Update 24h change
+                    const changeElement = document.querySelector('.text-2xl.font-bold');
+                    const change = parseFloat(data.price_change_percentage_24h);
+                    changeElement.textContent = `${change >= 0 ? '+' : ''}${change.toFixed(2)}%`;
+                    changeElement.className = `text-2xl font-bold ${change >= 0 ? 'change-positive' : 'change-negative'}`;
+                    
+                    // Update high/low
+                    document.querySelector('.text-sm.text-gray-400:nth-child(2)').textContent = `High: $${parseFloat(data.high_24h).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                    document.querySelector('.text-sm.text-gray-400:nth-child(3)').textContent = `Low: $${parseFloat(data.low_24h).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                    
+                    // Update market stats
+                    const marketCap = document.querySelector('.space-y-2 div:nth-child(1) span:last-child');
+                    const volume = document.querySelector('.space-y-2 div:nth-child(2) span:last-child');
+                    marketCap.textContent = `$${parseFloat(data.market_cap).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                    volume.textContent = `$${parseFloat(data.total_volume).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                });
+        }, 30000);
+    </script>
+</body>
+</html> 
